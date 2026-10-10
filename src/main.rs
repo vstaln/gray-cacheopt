@@ -75,6 +75,7 @@ fn sidecar() -> std::io::Result<()> {
 fn main() {
     let arg = std::env::args().nth(1).unwrap_or_default();
     match arg.as_str() {
+        "manifest" => println!("{}", g::manifest()),
         "stats" | "cachestats" => print!("{}", g::format_stats(&g::load_stats())),
         "reset" => {
             g::save_stats(&g::Stats::default());
