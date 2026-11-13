@@ -94,7 +94,10 @@ pub fn record_turn(s: &mut Stats, u: &Value) {
 /// compared against fingerprints computed by this same sidecar instance.
 fn msg_hash(m: &Value) -> u64 {
     let mut h = DefaultHasher::new();
-    m.get("role").and_then(|r| r.as_str()).unwrap_or("").hash(&mut h);
+    m.get("role")
+        .and_then(|r| r.as_str())
+        .unwrap_or("")
+        .hash(&mut h);
     if let Some(parts) = m.get("content").and_then(|c| c.as_array()) {
         for p in parts {
             if let Some(t) = p.get("text").and_then(|t| t.as_str()) {
@@ -172,6 +175,7 @@ pub fn manifest() -> Value {
         "sidecar_args": ["sidecar"],
         "tools": [],
         "commands": ["/cachestats"],
+        "command_descriptions": {"/cachestats": "prompt-cache hit rate and prefix churn"},
         "completion": ["reset"],
         "hooks": ["prompt/context", "context/build"],
     })
@@ -253,8 +257,11 @@ mod tests {
     fn stats_accumulate_and_cap() {
         let mut s = Stats::default();
         for _ in 0..30 {
-            record_turn(&mut s, &json!({"input_tokens": 100, "output_tokens": 10,
-                "cache_read_input_tokens": 80, "cache_write_input_tokens": 5}));
+            record_turn(
+                &mut s,
+                &json!({"input_tokens": 100, "output_tokens": 10,
+                "cache_read_input_tokens": 80, "cache_write_input_tokens": 5}),
+            );
         }
         assert_eq!(s.turns, 30);
         assert_eq!(s.cache_read, 2400);
