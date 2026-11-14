@@ -174,9 +174,12 @@ pub fn manifest() -> Value {
         "protocol": PROTOCOL,
         "sidecar_args": ["sidecar"],
         "tools": [],
+        "description": "prompt-cache hit rate and prefix churn",
         "commands": ["/cachestats"],
         "command_descriptions": {"/cachestats": "prompt-cache hit rate and prefix churn"},
-        "completion": ["reset"],
+        "completion": [
+            {"arg": "reset", "description": "reset the cache stats"},
+        ],
         "hooks": ["prompt/context", "context/build"],
     })
 }
